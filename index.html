@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flanker withWM GLM 模型总览</title>
+  <style>
+    :root{--navy:#102f4b;--ink:#172a3a;--muted:#597080;--line:#d6e1e8;--paper:#f4f8fb;--teal:#087f82;--blue:#2769c8;--orange:#d86e26;--violet:#7652b8;--fir:#9d5b17;--white:#fff;--shadow:0 9px 28px rgba(18,47,72,.09)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 Inter,"Segoe UI","Microsoft YaHei",Arial,sans-serif}a{color:#115a8f;text-underline-offset:3px}.wrap{max-width:1460px;margin:auto;padding:0 28px}.hero{background:linear-gradient(118deg,#0d2c48,#165774 58%,#0b7b7c);color:#fff;padding:54px 0 39px}.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;opacity:.8}.hero h1{font-size:clamp(33px,4vw,52px);letter-spacing:-.04em;line-height:1.08;margin:10px 0}.hero p{max-width:900px;margin:0;color:#e0edf2;font-size:18px}.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}.nav a{color:#fff;text-decoration:none;border:1px solid #ffffff69;border-radius:99px;padding:5px 13px;font-size:13px}.top{display:grid;grid-template-columns:1.18fr .82fr;gap:20px;margin:30px 0}.panel,.model{background:var(--white);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}.panel{padding:20px 22px}.panel h2{font-size:19px;margin:0 0 8px}.panel p{margin:0;color:#415968}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.facts div{border-left:3px solid var(--blue);padding:2px 0 2px 9px;font-size:12px}.facts div:nth-child(2){border-color:var(--fir)}.facts div:nth-child(3){border-color:var(--teal)}.notice{margin:0 0 30px;padding:12px 16px;border-left:4px solid #d99327;background:#fff8e9;color:#644a16}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:42px 0 14px}.section-head h2{font-size:28px;line-height:1.2;margin:0}.section-head p{margin:0;color:var(--muted);max-width:700px}.model{margin:22px 0;overflow:hidden}.model-header{display:flex;justify-content:space-between;gap:18px;padding:20px 24px 17px;border-bottom:1px solid var(--line)}.model-header h3{font-size:22px;line-height:1.2;margin:0 0 5px}.model-header p{margin:0;color:var(--muted)}.tag{font-size:12px;white-space:nowrap;border:1px solid #abd6d4;color:#0b6c6d;background:#effaf9;border-radius:99px;padding:3px 9px;height:max-content}.model-grid{display:grid;grid-template-columns:1fr 1fr 1.35fr}.cell{padding:19px;border-right:1px solid var(--line);min-width:0}.cell:last-child{border:0}.cell h4{font-size:15px;margin:0 0 10px;color:var(--navy)}.timeline{min-height:251px;border:1px solid #e1ebf0;border-radius:9px;background:#fbfdff;padding:19px 16px 12px;position:relative}.axis{height:1px;background:#a4b8c5;position:relative;margin:26px 6px 22px}.axis:before,.axis:after{content:"";position:absolute;top:-19px;font-size:11px;color:#607685}.axis:before{content:"trial start";left:0}.axis:after{content:"response onset";right:0}.tick{position:absolute;top:-5px;width:1px;height:11px;background:#a4b8c5}.lane{display:flex;align-items:center;height:27px;margin:6px 0;font-size:11px;gap:8px}.lane b{width:96px;color:#465e6d;font-weight:600;text-align:right;flex:none}.bar{height:18px;border-radius:3px;min-width:14px;color:#fff;padding:0 7px;line-height:18px;overflow:hidden;white-space:nowrap}.fir{background:var(--fir)}.duration{background:var(--teal)}.dg{background:var(--blue)}.incon{background:var(--violet)}.stick{height:23px;width:4px;border-radius:2px;background:var(--orange);margin-left:auto;margin-right:18%;position:relative}.stick:after{content:"";position:absolute;bottom:-2px;left:-5px;border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid var(--orange)}.time-note{font-size:11px;color:var(--muted);margin:12px 4px 0}.conv{min-height:251px;border:1px solid #e1ebf0;border-radius:9px;background:#fbfdff;padding:14px}.conv svg{display:block;width:100%;height:178px}.basis-note{font-size:12px;color:var(--muted);margin:2px 2px 0}.contrast{margin-top:11px;background:#edf4f7;border-radius:7px;padding:8px 10px;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:#294455}.cope-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.cope{margin:0;padding:6px;border:1px solid #e0e9ee;border-radius:9px;background:#fbfcfd}.cope img{display:block;width:100%;height:auto;cursor:zoom-in}.cope figcaption{font-size:12px;color:#435d6c;line-height:1.35;margin:5px 2px 0}.empty{font-size:13px;color:var(--muted);margin:10px 0}.details{margin-top:13px;border-top:1px dashed #cbd9e1;padding-top:11px}.details summary{cursor:pointer;color:#155c8d;font-weight:600}.details p{font-size:13px;color:#526a78;margin:7px 0 0}.dewm{background:#eaf0f3;border:1px solid #cbd8df;border-radius:14px;padding:22px;margin:42px 0}.dewm h2{font-size:22px;margin:0 0 6px}.dewm p{margin:0;color:#526875}.footer{color:var(--muted);font-size:13px;padding:0 0 35px}@media(max-width:1040px){.top{grid-template-columns:1fr}.model-grid{grid-template-columns:1fr 1fr}.cell:last-child{grid-column:1/-1;border-top:1px solid var(--line)}.facts{grid-template-columns:repeat(3,1fr)}}@media(max-width:680px){.wrap{padding:0 14px}.hero{padding:38px 0 29px}.top{margin-top:20px}.facts{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:8px}.model-header{display:block;padding:17px}.tag{display:inline-block;margin-top:9px}.model-grid{grid-template-columns:1fr}.cell{border-right:0;border-bottom:1px solid var(--line);padding:15px}.cell:last-child{grid-column:auto;border-bottom:0}.cope-grid{grid-template-columns:1fr}}
+    /* The new same-axis panel sits below the two modelling panels; COPE results remain
+       vertically aligned with both rows for direct model-to-result reading. */
+    @media(min-width:1041px){.model-grid{grid-template-columns:1fr 1fr 1.35fr;grid-template-areas:"time basis cope" "overlap overlap cope"}.cell.time{grid-area:time}.cell.basis{grid-area:basis}.cell.cope-cell{grid-area:cope}.cell.overlap{grid-area:overlap;border-top:1px solid var(--line);border-right:1px solid var(--line)}}
+    .overlap-plot{border:1px solid #e1ebf0;border-radius:9px;background:#fbfdff;padding:10px 12px}.overlap-plot svg{display:block;width:100%;height:auto}.overlap-key{display:flex;gap:11px;flex-wrap:wrap;margin:8px 1px 0;color:#526b79;font-size:11px}.overlap-key span{display:inline-flex;align-items:center;gap:4px}.overlap-key i{display:inline-block;width:13px;height:3px;border-radius:3px}.overlap-key em{font-style:normal;border-top:2px dashed currentColor;width:14px;height:0}.peak-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.peak{border:1px solid #d9e5eb;background:#f2f7f9;border-radius:99px;padding:2px 8px;color:#395566;font-size:11px}.overlap-note{color:var(--muted);font-size:11px;margin:8px 2px 0}
+    @media(max-width:1040px){.cell.overlap{grid-column:1/-1;border-top:1px solid var(--line);border-right:0}.cell.cope-cell{grid-column:1/-1;border-top:1px solid var(--line)}}@media(max-width:680px){.cell.overlap,.cell.cope-cell{grid-column:auto}}
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="wrap">
+    <div class="eyebrow">FLANKER TASK · FIRST-LEVEL GLM · WITH WHITE-MATTER SIGNAL RETAINED</div>
+    <h1>withWM 模型、时序与 COPE 总览</h1>
+    <p>每一行对应一个真实的一级 FEAT 设计文件；三列依次解释 GLM 时序、卷积/基函数假设，以及当前生成的 withWM COPE 空间结果。</p>
+    <nav class="nav"><a href="结果解释.html">主要结果</a><a href="文献补充解释.html">文献与机制</a><a href="#amn">AMN</a><a href="#scan">SCAN</a><a href="#dewm">去白质敏感性分析</a></nav>
+  </div></header>
+  <main class="wrap">
+    <section class="top"><div class="panel"><h2>模型审计范围</h2><p>逐一读取 <code>scripts/*_withWM/03_2_first_level_*.fsf</code> 中的 EV、卷积方式、contrast、TR 和滤波。项目中未发现名为 <code>03_1.fsf</code> 的 FSF；<code>03_2_first_level</code> 是实际的一级 GLM 设计文件。所有图均引用当前 <code>results/withWM/</code> 中的最新 <code>cope*.png</code>。</p><div class="facts"><div><b>TR = 2 s</b><br>全部模型一致</div><div><b>high-pass = 100 s</b><br>全部模型一致</div><div><b>deriv_yn = 0</b><br>不加入时间导数</div></div></div><div class="panel"><h2>FSF 卷积标记</h2><p><b>FIR，convolve=6</b>：以 2 秒 bin 表达事件后的时间过程；<br><b>持续期 EV，convolve=0</b>：保留 timing 文件的持续时间，不再施加 canonical HRF；<br><b>double-gamma，convolve=3</b>：短暂事件以 canonical HRF 建模。</p></div></section>
+    <div class="notice"><b>读图边界：</b>不同模型的颜色深浅不能单独用于比较“激活大小”。EV 时序、卷积方式以及相互竞争的解释方差共同决定每张 COPE 的含义。</div>
+    <div class="section-head" id="amn"><h2>AMN 模型</h2><p>从粗粒度 trial 建模到按条件和阶段拆分的混合 FIR/double-gamma 模型，逐步检验任务集、维持、反应准备与反应执行。</p></div>
+    <div id="amn-models"></div>
+    <div class="section-head" id="scan"><h2>SCAN 模型</h2><p>以左右侧化的 preResponse 与 response 事件描述动作相关过程；response 模型把两者放在同一个 GLM 中直接检验可分离性。</p></div>
+    <div id="scan-models"></div>
+    <section class="dewm" id="dewm"><h2>去白质信号：仅作为最后的敏感性分析</h2><p>本页的主体与所有主要解释均使用 withWM 图。deWM 不与主结果并列，而在确认主结果之后回答“该空间模式对去白质回归是否敏感”。相应的配对图与谨慎解释放在 <a href="结果解释.html#robust">主要结果页的最后一节</a>。</p></section>
+    <footer class="footer">图像来源：<code>results/withWM</code>。当前结果目录中不存在的 contrast 图会明确标注为缺失，不以 FSF 中的 contrast 名称虚构结果。点击任意 COPE 图可放大。</footer>
+  </main>
+  <div id="lightbox" style="display:none;position:fixed;inset:0;z-index:20;background:rgba(4,15,25,.9);padding:28px;align-items:center;justify-content:center"><button id="close" aria-label="关闭放大图" style="position:absolute;top:12px;right:20px;border:0;background:transparent;color:#fff;font-size:36px;cursor:pointer">×</button><img id="large" alt="" style="max-width:96vw;max-height:92vh;object-fit:contain"></div>
+  <script>
+    const models=[
+      {group:'amn',num:'01',name:'AMN trial',file:'AMN_trial_withWM/03_2_first_level_AMN.fsf',tag:'5 EV · 10 COPE',desc:'Start、maintenance、response 及 congruent/incongruent trial。核心 contrast 将每一阶段或试次与 response 相减。',lanes:[['Start','FIR','fir',18],['Maintenance','duration','duration',75],['Con trial','DG','dg',42],['Incon trial','DG','incon',42],['Response','DG','stick',0]],basis:['fir','duration','dg'],contrast:'C1–C5：阶段/试次 − response；C6–C10：各阶段或 trial 本身。',images:[['cope1_start_minus_response.png','C1 · start − response'],['cope2_maintenance_minus_response.png','C2 · maintenance − response'],['cope3_trial_all_minus_response.png','C3 · all trial − response'],['cope4_trial_congruent_minus_response.png','C4 · congruent trial − response'],['cope5_trial_incongruent_minus_response.png','C5 · incongruent trial − response'],['cope6_start.png','C6 · start'],['cope7_maintenance.png','C7 · maintenance'],['cope8_trial_all.png','C8 · all trial'],['cope9_trial_congruent.png','C9 · congruent trial'],['cope10_trial_incongruent.png','C10 · incongruent trial']],dir:'group_AMN_trial'},
+      {group:'amn',num:'02',name:'AMN response',file:'AMN_response_withWM/03_2_first_level_AMN_response.fsf',tag:'6 EV · 3 COPE',desc:'左右反应分别建模；response contrast 是 left 与 right 的等权平均。',lanes:[['Start','FIR','fir',18],['Maintenance','duration','duration',75],['Con trial','DG','dg',42],['Incon trial','DG','incon',42],['L / R response','DG','stick',0]],basis:['fir','duration','dg'],contrast:'C1 = 0.5×left + 0.5×right；C2/C3 分别为 left/right response。',images:[['cope1_response.png','C1 · response（左右平均）'],['cope2_left_response.png','C2 · left response'],['cope3_right_response.png','C3 · right response']],dir:'group_AMN_response'},
+      {group:'amn',num:'03',name:'AMN FIR-DG-FIR-DG',file:'AMN_FIR-DG-FIR-DG_withWM/03_2_first_level_AMN_FIR-DG-FIR-DG.fsf',tag:'7 EV · FSF 14 contrasts',desc:'Start 与 condition-specific preResponse 使用 FIR；condition-specific maintenance 与 response 使用 double-gamma。',lanes:[['Start','FIR','fir',18],['Con maintenance','DG','dg',56],['Incon maintenance','DG','incon',56],['Con preResponse','FIR','fir',25],['Incon preResponse','FIR','fir',25],['Con/Incon response','DG','stick',0]],basis:['fir','dg'],contrast:'包括各条件、all、incongruent > congruent；C14 = all maintenance − all response。',images:[['cope1_start.png','C1 · start'],['cope2_con_maintenance.png','C2 · congruent maintenance'],['cope3_incon_maintenance.png','C3 · incongruent maintenance'],['cope4_all_maintenance.png','C4 · all maintenance'],['cope5_incon_gt_con_maintenance.png','C5 · incon > con maintenance'],['cope6_con_preResponse.png','C6 · congruent preResponse'],['cope7_incon_preResponse.png','C7 · incongruent preResponse'],['cope8_all_preResponse.png','C8 · all preResponse'],['cope9_incon_gt_con_preResponse.png','C9 · incon > con preResponse'],['cope10_con_response.png','C10 · congruent response'],['cope11_incon_response.png','C11 · incongruent response'],['cope12_all_response.png','C12 · all response'],['cope13_incon_gt_con_response.png','C13 · incon > con response'],['cope14_all_maintenance_minus_all_response.png','C14 · all maintenance − all response']],dir:'group_AMN_FIR-DG-FIR-DG'},
+      {group:'amn',num:'04',name:'AMN SW-FIR-DG',file:'AMN_SW-FIR-DG_withWM/03_2_first_level_AMN_SW-FIR-DG.fsf',tag:'6 EV · 12 COPE',desc:'不建模 start；maintenance 为持续期 EV，preResponse 为 FIR，response 为 double-gamma，集中于维持—准备—执行的条件差异。',lanes:[['Con maintenance','duration','duration',60],['Incon maintenance','duration','incon',60],['Con preResponse','FIR','fir',25],['Incon preResponse','FIR','fir',25],['Con/Incon response','DG','stick',0]],basis:['duration','fir','dg'],contrast:'每个阶段都包含 congruent、incongruent、all 与 incongruent > congruent 对比。',images:[['cope3_all_maintenance.png','C3 · all maintenance'],['cope4_incon_gt_con_maintenance.png','C4 · incon > con maintenance'],['cope7_all_preResponse.png','C7 · all preResponse'],['cope8_incon_gt_con_preResponse.png','C8 · incon > con preResponse'],['cope11_all_response.png','C11 · all response'],['cope12_incon_gt_con_response.png','C12 · incon > con response']],dir:'group_AMN_SW-FIR-DG'},
+      {group:'scan',num:'05',name:'SCAN preResponse',file:'SCAN_preResponse_withWM/03_2_first_level_SCAN.fsf',tag:'2 EV · 3 COPE',desc:'只包含 left/right preResponse 两个 canonical-HRF EV，是最简的反应前准备模型。',lanes:[['Left preResponse','DG','dg',30],['Right preResponse','DG','incon',30]],basis:['dg'],contrast:'C1 left；C2 right；C3 = 0.5×left + 0.5×right。',images:[['cope1_left.png','C1 · left preResponse'],['cope2_right.png','C2 · right preResponse'],['cope3_all.png','C3 · all preResponse']],dir:'group_SCAN_preResponse'},
+      {group:'scan',num:'06',name:'SCAN response',file:'SCAN_response_withWM/03_2_first_level_SCAN_response.fsf',tag:'3 EV · FSF 7 contrasts',desc:'左右 preResponse 与共同 response 同时进入 GLM；这是直接比较反应前与反应执行成分的嵌套模型。',lanes:[['Left preResponse','DG','dg',29],['Right preResponse','DG','incon',29],['Response','DG','stick',0]],basis:['dg'],contrast:'C5/C6：side-specific preResponse − response；C7：all preResponse − response。',images:[['cope1_left_preResponse.png','C1 · left preResponse'],['cope2_right_preResponse.png','C2 · right preResponse'],['cope3_all_preResponse.png','C3 · all preResponse'],['cope4_response.png','C4 · response'],['cope7_all_pre_minus_response.png','C7 · all preResponse − response']],dir:'group_SCAN_response',missing:'当前目录未含 C5 left preResponse − response 与 C6 right preResponse − response 图。'},
+      {group:'scan',num:'07',name:'SCAN response-only',file:'SCAN_response_only_withWM/03_2_first_level_SCAN_response_only.fsf',tag:'2 EV · 3 COPE',desc:'只保留左、右 response 的 canonical-HRF 建模，是 SCAN response 中反应成分的窄模型参照。',lanes:[['Left response','DG','dg',28],['Right response','DG','incon',28]],basis:['dg'],contrast:'C1 left response；C2 right response；C3 = 0.5×left + 0.5×right。',images:[['cope1_left_response.png','C1 · left response'],['cope2_right_response.png','C2 · right response'],['cope3_all_response.png','C3 · all response']],dir:'group_SCAN_response_only'}
+    ];
+    function timeline(m){const lanes=m.lanes.map((x,i)=>x[2]==='stick'?'<div class="lane"><b>'+x[0]+' · '+x[1]+'</b><span class="stick"></span></div>':'<div class="lane"><b>'+x[0]+' · '+x[1]+'</b><span class="bar '+x[2]+'" style="width:'+x[3]+'%">'+x[1]+'</span></div>').join('');return '<div class="timeline"><div class="axis"><span class="tick" style="left:0"></span><span class="tick" style="left:70%"></span></div>'+lanes+'<p class="time-note">相对位置为模型逻辑示意；各 run 的精确 onset 与 duration 由 FSF 所指向的 custom timing 文件提供。</p></div>'}
+    function convolution(m){let lanes='';if(m.basis.includes('fir'))lanes+='<text x="18" y="50" font-size="13" fill="#9d5b17" font-weight="700">FIR</text><path d="M75 53h36l8-22 8 44 8-22h28" fill="none" stroke="#9d5b17" stroke-width="3"/><g fill="#e8c28f"><rect x="180" y="27" width="24" height="45"/><rect x="209" y="27" width="24" height="45"/><rect x="238" y="27" width="24" height="45"/></g><text x="282" y="51" font-size="12" fill="#597080">→ 2-s bins; no fixed HRF</text>';if(m.basis.includes('duration'))lanes+='<text x="18" y="110" font-size="13" fill="#087f82" font-weight="700">Duration EV</text><rect x="110" y="92" width="110" height="20" rx="3" fill="#087f82"/><text x="238" y="108" font-size="12" fill="#597080">→ retain duration; no convolution</text>';if(m.basis.includes('dg'))lanes+='<text x="18" y="168" font-size="13" fill="#2769c8" font-weight="700">Double-gamma</text><path d="M130 172h30l7-20 8 40 7-20h24" fill="none" stroke="#2769c8" stroke-width="3"/><path d="M245 191c20 0 17-55 50-55 35 0 29 84 87 54" fill="none" stroke="#2769c8" stroke-width="3"/><text x="245" y="215" font-size="12" fill="#597080">event train × canonical HRF</text>';return '<div class="conv"><svg viewBox="0 0 500 235" role="img" aria-label="卷积和基函数示意"><text x="18" y="20" font-size="15" fill="#172a3a" font-weight="700">该 FSF 的时间基函数</text>'+lanes+'</svg><p class="basis-note">TR = 2 s；temporal derivative 未启用。</p></div>'}
+    /*
+      These plots intentionally retain the relative magnitude produced by a unit
+      event input, its duration, and the selected basis. Curves are not individually
+      peak-normalized: they are a design-regressor schematic, not effect-size estimates.
+      Timing constants match the project schematic (maintenance 2.00 s; preResponse
+      1.56–2.14 s; response onset 2.14 s).
+    */
+    const time={end:14,step:.025,maintenanceOn:0,maintenanceDur:2,preOn:1.56,preDur:.58,responseOn:2.14,responseDur:.1,trialOn:.4,trialDur:1.5,startOn:0,startDur:.1};
+    const colors={start:'#8b5cb5',maintenance:'#2774b8',pre:'#ed8a29',response:'#4d9a58',trial:'#4b78c8'};
+    const curve=(label,kind,on,dur,color,dash='')=>({label,kind,on,dur,color,dash});
+    function makeCurves(m){
+      const t=time;
+      if(m.name==='AMN trial')return[
+        curve('start · FIR','fir',t.startOn,t.startDur,colors.start),
+        curve('maintenance · duration','duration',t.maintenanceOn,t.maintenanceDur,colors.maintenance),
+        curve('congruent trial · DG','dg',t.trialOn,t.trialDur,colors.trial),
+        curve('incongruent trial · DG','dg',t.trialOn,t.trialDur,'#7652b8','7 5'),
+        curve('response · DG','dg',t.responseOn,t.responseDur,colors.response)
+      ];
+      if(m.name==='AMN response')return[
+        curve('start · FIR','fir',t.startOn,t.startDur,colors.start),
+        curve('maintenance · duration','duration',t.maintenanceOn,t.maintenanceDur,colors.maintenance),
+        curve('left response · DG','dg',t.responseOn,t.responseDur,colors.response),
+        curve('right response · DG','dg',t.responseOn,t.responseDur,'#247e85','7 5'),
+        curve('congruent trial · DG','dg',t.trialOn,t.trialDur,colors.trial),
+        curve('incongruent trial · DG','dg',t.trialOn,t.trialDur,'#7652b8','7 5')
+      ];
+      if(m.name==='AMN FIR-DG-FIR-DG')return[
+        curve('start · FIR','fir',t.startOn,t.startDur,colors.start),
+        curve('con maintenance · DG','dg',t.maintenanceOn,t.maintenanceDur,colors.maintenance),
+        curve('incon maintenance · DG','dg',t.maintenanceOn,t.maintenanceDur,colors.maintenance,'7 5'),
+        curve('con preResponse · FIR','fir',t.preOn,t.preDur,colors.pre),
+        curve('incon preResponse · FIR','fir',t.preOn,t.preDur,colors.pre,'7 5'),
+        curve('con response · DG','dg',t.responseOn,t.responseDur,colors.response),
+        curve('incon response · DG','dg',t.responseOn,t.responseDur,colors.response,'7 5')
+      ];
+      if(m.name==='AMN SW-FIR-DG')return[
+        curve('con maintenance · duration','duration',t.maintenanceOn,t.maintenanceDur,colors.maintenance),
+        curve('incon maintenance · duration','duration',t.maintenanceOn,t.maintenanceDur,colors.maintenance,'7 5'),
+        curve('con preResponse · FIR','fir',t.preOn,t.preDur,colors.pre),
+        curve('incon preResponse · FIR','fir',t.preOn,t.preDur,colors.pre,'7 5'),
+        curve('con response · DG','dg',t.responseOn,t.responseDur,colors.response),
+        curve('incon response · DG','dg',t.responseOn,t.responseDur,colors.response,'7 5')
+      ];
+      if(m.name==='SCAN preResponse')return[
+        curve('left preResponse · DG','dg',t.preOn,t.preDur,colors.pre),
+        curve('right preResponse · DG','dg',t.preOn,t.preDur,'#7652b8','7 5')
+      ];
+      if(m.name==='SCAN response')return[
+        curve('left preResponse · DG','dg',t.preOn,t.preDur,colors.pre),
+        curve('right preResponse · DG','dg',t.preOn,t.preDur,'#7652b8','7 5'),
+        curve('response · DG','dg',t.responseOn,t.responseDur,colors.response)
+      ];
+      return[
+        curve('left response · DG','dg',t.responseOn,t.responseDur,colors.response),
+        curve('right response · DG','dg',t.responseOn,t.responseDur,'#247e85','7 5')
+      ];
+    }
+    function dgKernel(u){
+      if(u<=0)return 0;
+      const main=Math.pow(u,5)*Math.exp(-u/.9);
+      const under=Math.pow(u,11)*Math.exp(-u/.9);
+      const mainPeak=Math.pow(4.5,5)*Math.exp(-4.5/.9);
+      const underPeak=Math.pow(9.9,11)*Math.exp(-9.9/.9);
+      return Math.max(0,main/mainPeak-.15*(under/underPeak));
+    }
+    function regressor(c){
+      const n=Math.round(time.end/time.step)+1, values=[];
+      for(let i=0;i<n;i++){
+        const now=i*time.step;
+        if(c.kind==='duration'){values.push(now>=c.on&&now<c.on+c.dur?1:0);continue}
+        let total=0;
+        for(let j=0;j<=i;j++){
+          const eventTime=j*time.step;
+          if(eventTime<c.on||eventTime>=c.on+c.dur)continue;
+          const lag=now-eventTime;
+          const k=c.kind==='fir'?(lag>=0&&lag<2?1:0):dgKernel(lag);
+          total+=k*time.step;
+        }
+        values.push(total);
+      }
+      return values;
+    }
+    function sameAxisPlot(m){
+      const curves=makeCurves(m).map(c=>({...c,values:regressor(c)}));
+      const W=760,H=300,ml=64,mr=16,mt=24,mb=43,pw=W-ml-mr,ph=H-mt-mb;
+      const max=Math.max(1,...curves.flatMap(c=>c.values))*1.12;
+      const sx=x=>ml+x/time.end*pw,sy=y=>mt+ph-y/max*ph;
+      let grid='',labels='';
+      for(let tick=0;tick<=14;tick+=2){const x=sx(tick);grid+='<line x1="'+x+'" y1="'+mt+'" x2="'+x+'" y2="'+(mt+ph)+'" stroke="#dce7ed" stroke-width="1"/>';labels+='<text x="'+x+'" y="'+(H-20)+'" text-anchor="middle" fill="#597080" font-size="11">'+tick+'</text>'}
+      for(let i=0;i<=4;i++){const v=max*i/4,y=sy(v);grid+='<line x1="'+ml+'" y1="'+y+'" x2="'+(W-mr)+'" y2="'+y+'" stroke="#dce7ed" stroke-width="1"/>';labels+='<text x="'+(ml-9)+'" y="'+(y+4)+'" text-anchor="end" fill="#597080" font-size="11">'+v.toFixed(2)+'</text>'}
+      const paths=curves.map(c=>{const d=c.values.map((v,i)=>(i?'L':'M')+sx(i*time.step).toFixed(1)+' '+sy(v).toFixed(1)).join(' ');return '<path d="'+d+'" fill="none" stroke="'+c.color+'" stroke-width="2.4" '+(c.dash?'stroke-dasharray="'+c.dash+'"':'')+'/>'}).join('');
+      const legend=curves.map(c=>'<span><i style="background:'+c.color+'"></i>'+c.label+(c.dash?' <em style="color:'+c.color+'"></em>':'')+'</span>').join('');
+      const unique=curves.filter((c,i,a)=>a.findIndex(o=>o.label.replace(/^(con |incon |left |right )/,'').replace('incongruent ','')===c.label.replace(/^(con |incon |left |right )/,'').replace('incongruent ',''))===i);
+      const peaks=unique.map(c=>'<span class="peak">'+c.label.replace(' · ',' · ')+' peak '+Math.max(...c.values).toFixed(2)+'</span>').join('');
+      return '<div class="overlap-plot"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+m.name+' 的卷积后同轴设计回归量"><text x="'+ml+'" y="15" fill="#172a3a" font-size="14" font-weight="700">同一时间轴上的卷积后设计回归量</text>'+grid+'<rect x="'+ml+'" y="'+mt+'" width="'+pw+'" height="'+ph+'" fill="none" stroke="#aebfc9" stroke-width="1"/>'+paths+labels+'<text x="'+(ml+pw/2)+'" y="'+(H-3)+'" text-anchor="middle" fill="#597080" font-size="12">距 maintenance onset 的时间（s）</text><text transform="translate(15 '+(mt+ph/2)+') rotate(-90)" text-anchor="middle" fill="#597080" font-size="12">相对设计回归量幅度</text></svg><div class="overlap-key">'+legend+'</div><div class="peak-strip">'+peaks+'</div><p class="overlap-note">所有事件输入幅度固定为 1，曲线未逐条峰值归一化；峰值差异来自事件持续时间与 FIR / duration / double-gamma 的基函数差异，并非条件效应或 BOLD 效应量。</p></div>'
+    }
+    function figures(m){return '<div class="cope-grid">'+m.images.map(x=>'<figure class="cope"><img loading="lazy" src="withWM/'+m.dir+'/'+x[0]+'" alt="'+x[1]+'"><figcaption>'+x[1]+'</figcaption></figure>').join('')+'</div>'}
+    function render(m){return '<article class="model"><div class="model-header"><div><h3>'+m.num+' · '+m.name+'</h3><p><code>'+m.file+'</code>。'+m.desc+'</p></div><span class="tag">'+m.tag+'</span></div><div class="model-grid"><section class="cell time"><h4>GLM 时序建模图</h4>'+timeline(m)+'</section><section class="cell basis"><h4>卷积/基函数示意图</h4>'+convolution(m)+'<div class="contrast">'+m.contrast+'</div></section><section class="cell overlap"><h4>卷积后同轴表征 · 评估潜在共线性</h4>'+sameAxisPlot(m)+'</section><section class="cell cope-cell"><h4>当前 withWM COPE 图</h4>'+figures(m)+(m.missing?'<details class="details"><summary>当前结果与 FSF contrast 的差异</summary><p>'+m.missing+'</p></details>':'')+'</section></div></article>'}
+    document.getElementById('amn-models').innerHTML=models.filter(m=>m.group==='amn').map(render).join('');
+    document.getElementById('scan-models').innerHTML=models.filter(m=>m.group==='scan').map(render).join('');
+    const box=document.getElementById('lightbox'),large=document.getElementById('large');document.addEventListener('click',e=>{if(e.target.matches('.cope img')){large.src=e.target.src;large.alt=e.target.alt;box.style.display='flex'}});document.getElementById('close').onclick=()=>box.style.display='none';box.onclick=e=>{if(e.target===box)box.style.display='none'};document.addEventListener('keydown',e=>{if(e.key==='Escape')box.style.display='none'});
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flanker AMN SCAN 文献与机制解释</title>
+  <style>
+    :root{--navy:#112f4b;--ink:#172a3a;--muted:#587080;--paper:#f4f8fb;--line:#d6e1e8;--white:#fff;--teal:#087f82;--orange:#d88924;--shadow:0 8px 24px rgba(18,47,72,.08)}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.75 Inter,"Segoe UI","Microsoft YaHei",Arial,sans-serif}a{color:#145d91;text-underline-offset:3px}.wrap{max-width:1040px;margin:auto;padding:0 26px}.hero{padding:58px 0 40px;background:linear-gradient(118deg,#0e2d49,#175876 58%,#0b7a7b);color:#fff}.eyebrow{font-size:12px;letter-spacing:.14em;font-weight:700;opacity:.82}.hero h1{font-size:clamp(32px,4vw,50px);letter-spacing:-.035em;line-height:1.1;margin:10px 0}.hero p{max-width:800px;margin:0;font-size:18px;color:#e0edf2}.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}.nav a{color:#fff;text-decoration:none;border:1px solid #ffffff68;border-radius:99px;padding:5px 13px;font-size:13px}.purpose{margin:29px 0;padding:16px 18px;background:#edf8f7;border-left:4px solid var(--teal);color:#284e50}.section{margin:39px 0}.section h2{font-size:28px;line-height:1.25;margin:0 0 8px}.section>p{color:var(--muted);margin:0 0 16px}.paper{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:21px 23px;box-shadow:var(--shadow);margin:16px 0}.paper h3{font-size:19px;margin:0 0 7px}.paper p{margin:0;color:#405968}.paper p+p{margin-top:10px}.tag{font-size:12px;font-weight:700;letter-spacing:.07em;color:#08706f}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.flow div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px;font-size:14px;color:#3e5665}.flow b{display:block;color:var(--teal);margin-bottom:3px}.warn{padding:13px 16px;background:#fff7e8;border-left:4px solid var(--orange);color:#644b17;margin:18px 0}.questions{margin:8px 0 0;padding-left:19px;color:#405968}.questions li{margin:7px 0}.refs{font-size:14px;color:var(--muted);padding:17px 0 36px;border-top:1px solid var(--line);margin-top:35px}@media(max-width:720px){.wrap{padding:0 15px}.hero{padding:41px 0 31px}.flow{grid-template-columns:1fr 1fr}} 
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="wrap">
+    <div class="eyebrow">LITERATURE-BASED INTERPRETATION · CONSTRAINED BY THE ACTUAL GLM</div>
+    <h1>文献与机制解释</h1>
+    <p>这里不是为结果寻找“好听的故事”，而是将已建模的阶段、contrast 和空间模式放进任务集实施、动作准备、冲突控制与错误监测的可检验框架。</p>
+    <nav class="nav"><a href="结果解释.html">主要结果</a><a href="model_overview.html">GLM 模型总览</a><a href="#sets">任务集</a><a href="#prepare">反应前准备</a><a href="#conflict">冲突</a><a href="#limits">解释边界</a></nav>
+  </div></header>
+  <main class="wrap">
+    <div class="purpose"><b>使用方式：</b>先在 <a href="model_overview.html">模型总览</a> 确认某张图的 EV 与 contrast，再回到本页选择可被该设计支持的解释。主结论以 withWM 结果为基础；去白质版本仅用作后置的敏感性分析。</div>
+
+    <section class="section" id="sets"><h2>一 · 任务集实施不等同于动作执行</h2><p>对 AMN trial 中 start、maintenance、trial 与 response 的区分，最自然的理论入口是 task-set implementation，而不是将所有 task-positive 模式一概叫作“控制”。</p>
+      <article class="paper"><span class="tag">与 Dosenbach 等人的关系</span><h3>从任务规则到可执行的控制状态</h3><p>Dosenbach 等人对 core system / task-set 的描述支持这样一种工作解释：任务开始、维持和反应不是彼此无关的时间点，而是将规则、目标与行动要求转译为可执行状态的不同阶段。AMN 中的阶段性 contrast 因而可被用来定位“相对动作执行仍保留的任务集相关成分”。</p><p>这不意味着 AMN 的每一处活动都具有同一功能，也不意味着网络边界就是心理过程边界。更严谨的表达是：AMN trial 模型为“任务集实施与反应执行至少部分可分”提供了设计层面的检验。</p></article>
+      <div class="flow"><div><b>Start</b>任务状态建立</div><div><b>Maintenance</b>规则/目标的持续可用性</div><div><b>preResponse</b>反应选择或准备</div><div><b>Response</b>动作实施及其伴随控制</div></div>
+    </section>
+
+    <section class="section" id="prepare"><h2>二 · preResponse 是动作准备的候选窗口，而不是标签答案</h2><p>SCAN response 将 left/right preResponse 与 response 同时纳入 GLM，这一设计比两张独立图的空间比较更接近“分离”问题。</p>
+      <article class="paper"><span class="tag">可支持的解释</span><h3>动作前状态可以包含多个成分</h3><p>反应前活动可共同承载刺激证据累积、冲突解决、反应选择、效应器准备和阈值调节。因而 preResponse − response 的空间差异并不要求它们是两个绝对独立网络；它更可能是同一控制链条在不同时间窗和不同信息需求下的状态变化。</p><p>在当前模型中，更准确的说法是：“在共同控制 response EV 的条件下，preResponse 仍有独立的估计结构。”这为准备性过程提供候选神经表征，但尚不能仅凭空间图决定其具体成分。</p></article>
+      <article class="paper"><span class="tag">关键的后续检验</span><h3>用行为把“准备”变成可证伪假设</h3><ul class="questions"><li>preResponse 强度能否预测 trial-level 反应时、反应时变异或错误？</li><li>这种预测在 incongruent 条件是否更强？</li><li>preResponse 的 FIR 时程是否在行为困难增加时提前、延长或增幅？</li><li>其与下一试次控制调整或 post-error slowing 是否相关？</li></ul></article>
+    </section>
+
+    <section class="section" id="conflict"><h2>三 · 冲突效应应按阶段定位</h2><p>SW-FIR-DG 和 FIR-DG-FIR-DG 都包含 <code>incongruent &gt; congruent</code>，但分别位于 maintenance、preResponse 和 response 阶段。理论问题由此从“有没有冲突激活”变成“冲突调制首先、主要或仅在哪个阶段出现”。</p>
+      <article class="paper"><span class="tag">可检验的阶段假设</span><h3>维持、准备与执行可有不同的冲突角色</h3><p>若冲突差异主要出现在 maintenance，可优先考虑规则维持、预期或控制状态的持续调节；若主要出现在 preResponse，可考虑反应选择、竞争解决或动作阈值配置；若主要出现在 response，则更接近执行阶段的条件调制。这些都只是阶段化假设，需结合条件间时程、行为代价和独立复制来评估。</p><p>使用 FIR 的优势在于不强迫 preResponse 遵循单一 canonical HRF 形状。因此，若 FIR 与 double-gamma 版本都指向相近的阶段性结论，报告的可信度会提高；若二者不一致，则“不确定性”本身是重要结果。</p></article>
+    </section>
+
+    <section class="section"><h2>四 · maintenance 与 response 的重叠：优先审查建模，而非急于命名脑功能</h2>
+      <article class="paper"><span class="tag">时间建模的含义</span><h3>共享方差是合理的候选解释</h3><p>maintenance 是持续期 EV，而 response 是短暂 canonical-HRF EV；二者在真实任务中时间相邻并可能部分重叠。若 maintenance − response 仍有结构性结果，表明在该设计矩阵下仍可区分的方差存在；若两者的未校正空间图重叠，也不等价于“二者是同一过程”。</p><p>最有价值的下一步是导出/检查设计矩阵相关性、FIR 时间曲线和 trial-level 行为耦合，而不是依据一张组水平表面图断定 maintenance 已经包含了某种确定的 response 信号。</p></article>
+    </section>
+
+    <section class="section" id="limits"><h2>五 · 解释边界与汇报措辞</h2>
+      <div class="warn"><b>可以说：</b>“在特定的 withWM 一级 GLM 中，阶段间 contrast 显示可区分的空间估计模式。”<br><b>不应直接说：</b>“某网络在因果上驱动了另一个网络”，或“任何与行为有关的区域都特异地实施某一心理过程”。</div>
+      <article class="paper"><span class="tag">去白质信号放在最后</span><h3>敏感性分析不改写主发现的证据等级</h3><p>去除白质信号后结果若与 withWM 结果接近，可以作为处理选择下的稳健性线索；若改变明显，则应报告依赖性并探索来源。它既不能证明白质传播机制，也不能自动证明 withWM 或 deWM 中某一版本更“真实”。主页面首先呈现 withWM，是因为它与实际设计和当前主要图的证据链保持一致。</p></article>
+    </section>
+
+    <section class="section"><h2>六 · 推荐的国际会议叙事</h2><article class="paper"><p><b>第一步：</b>展示模型审计：不同 EV、FIR / 持续期 / double-gamma 的建模含义，以及 contrast 对应的问题。</p><p><b>第二步：</b>报告 withWM 主结果：试次期相对 response 的差异、SCAN 中 preResponse 与 response 的分离，以及条件调制在阶段上的定位。</p><p><b>第三步：</b>把这些结果连接到“任务集实施 → 准备/选择 → 执行”的工作模型，同时明确是可检验框架而非因果结论。</p><p><b>第四步：</b>最后用 deWM 配对结果讨论稳健性与局限。</p></article></section>
+    <footer class="refs">文献线索：Dosenbach et al. (2006), <i>A core system for the implementation of task sets</i>；Eichele et al. (2008), <i>Prediction of human errors by maladaptive changes in event-related brain activity</i>；项目内的 Action-mode subnetworks (2025) 与 Wang et al. (2025) 文献。正式摘要/论文应按目标会议或期刊核对版本、DOI 与引用格式。</footer>
+  </main>
+</body>
+</html>
