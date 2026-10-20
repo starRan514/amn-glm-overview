@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AMN-SCAN 单图表面绘制：参数参考</title>
+<style>
+body{margin:0;background:#f5f7fa;color:#1f2937;font:16px/1.65 system-ui,"Microsoft YaHei",sans-serif}main{max-width:1050px;margin:auto;padding:36px 22px 70px}h1{font-size:30px;margin:0 0 8px}h2{margin-top:36px;border-bottom:2px solid #dbe4ef;padding-bottom:7px}h3{margin-top:24px}code,pre{font-family:ui-monospace,Consolas,monospace}code{background:#edf2f7;padding:2px 5px;border-radius:4px}pre{white-space:pre-wrap;background:#172033;color:#eef5ff;padding:18px;border-radius:8px;overflow:auto}.note{background:#e7f1ff;border-left:4px solid #2878c7;padding:12px 16px;border-radius:4px}.warn{background:#fff4dd;border-left:4px solid #d38b00;padding:12px 16px;border-radius:4px}table{width:100%;border-collapse:collapse;background:#fff}th,td{padding:10px 12px;text-align:left;vertical-align:top;border:1px solid #dbe4ef}th{background:#eaf0f7}tbody tr:nth-child(even){background:#f8fafc}.tag{display:inline-block;border-radius:99px;padding:2px 9px;background:#dbeafe;color:#174ea6;font-size:13px}a{color:#1463ad}
+</style>
+</head>
+<body><main>
+<h1>AMN-SCAN 单图表面绘制：参数参考</h1>
+<p><span class="tag">学生版</span> 脚本：<code>brain_surface_visualize_AMN-SCAN.py</code>。输入一张三维 MNI152 NIfTI 图，输出一张四面板 AMN-SCAN 表面图。</p>
+
+<h2>1. 最短使用示例</h2>
+<pre>python brain_surface_visualize_AMN-SCAN.py \
+  /path/to/zstat1.nii.gz \
+  /path/to/output \
+  cope10_right_response \
+  --overwrite</pre>
+<p>默认使用 <code>fsaverage6</code>、<code>41k</code> 顶点、<code>0.4 × pial + 0.6 × inflated</code>、AFNI activation 色带和全局 AMN 内缩。</p>
+
+<h2>2. 输入、输出与色带</h2>
+<table><thead><tr><th>参数</th><th>默认值</th><th>含义</th></tr></thead><tbody>
+<tr><td><code>input_file</code></td><td>必填</td><td>一张三维 MNI152 <code>.nii/.nii.gz</code> 图，例如 FSL 的 <code>zstat1.nii.gz</code>。</td></tr>
+<tr><td><code>output_dir</code></td><td>必填</td><td>结果目录。已有同名四面板 PNG 时默认跳过。</td></tr>
+<tr><td><code>output_basename</code></td><td>必填</td><td>输出文件前缀，不含路径分隔符。</td></tr>
+<tr><td><code>--overwrite</code></td><td>关闭</td><td>允许覆盖同名 PNG、投影和报告。</td></tr>
+<tr><td><code>--mode activation|fc</code></td><td><code>activation</code></td><td>选择 AFNI activation 色带或 FC 色带。FC 模式色带标题为 <code>Z(r)</code>。</td></tr>
+<tr><td><code>--lut-file</code></td><td>随模式选择</td><td>自定义 LUT 图像。activation LUT 必须为 256 行。</td></tr>
+<tr><td><code>--display-max</code></td><td>自动</td><td>activation：固定对称范围 <code>[-M, 0, +M]</code>；适合多图统一色带。</td></tr>
+<tr><td><code>--display-min</code>、<code>--display-mid</code></td><td>自动</td><td>FC 模式推荐显式设置三个范围参数，且必须满足 <code>min &lt; mid &lt; max</code>。</td></tr>
+</tbody></table>
+<pre># 多张 activation 图采用同一上限 M=5
+python brain_surface_visualize_AMN-SCAN.py map.nii.gz out map --display-max 5 --overwrite
+
+# FC 示例：显式给出 Z(r) 范围
+python brain_surface_visualize_AMN-SCAN.py fc.nii.gz out fc --mode fc \
+  --display-min 0.20 --display-mid 0.25 --display-max 0.30 --overwrite</pre>
+
+<h2>3. 表面空间与参考轮廓</h2>
+<table><thead><tr><th>参数</th><th>默认值</th><th>含义</th></tr></thead><tbody>
+<tr><td><code>--surface-space</code></td><td><code>fsaverage6</code></td><td><code>fsaverage5</code> 使用 10k/10242 顶点；<code>fsaverage6</code> 使用 41k/40962 顶点。</td></tr>
+<tr><td><code>--surface-dir</code></td><td>按空间选择</td><td>目标 FreeSurfer 表面目录，必须含 <code>surf</code> 和 <code>label</code>。</td></tr>
+<tr><td><code>--surface-mix-pial</code>、<code>--surface-mix-inflated</code></td><td><code>0.4</code>、<code>0.6</code></td><td>两者必须相加为 1。</td></tr>
+<tr><td><code>--amn-left-label</code>、<code>--amn-right-label</code></td><td>YeoVAN-PowerCON union</td><td>AMN 标签路径。</td></tr>
+<tr><td><code>--amn-reference-space</code></td><td><code>fsaverage5</code></td><td><code>fsaverage5</code>：按 pial 最近顶点映射至目标空间；<code>target</code>：标签已在目标空间。</td></tr>
+<tr><td><code>--scan-left-label</code>、<code>--scan-right-label</code></td><td>fsaverage6 自动查找</td><td>SCAN 左右标签。使用 fsaverage5 时必须显式提供匹配的 fsaverage5 标签。</td></tr>
+<tr><td><code>--scan-label-value</code></td><td><code>1.5</code></td><td>输入 SCAN GIFTI 中代表 SCAN 的数值。</td></tr>
+</tbody></table>
+<div class="warn">AMN 与 SCAN 参考必须与目标表面顶点数匹配。只有 AMN 的 fsaverage5 来源标签允许映射到 fsaverage6；不要把 fsaverage6 的 SCAN 标签直接用于 fsaverage5。</div>
+
+<h2>4. 轮廓线与 AMN 内缩</h2>
+<table><thead><tr><th>参数</th><th>默认值</th><th>含义</th></tr></thead><tbody>
+<tr><td><code>--contour-width</code></td><td><code>26</code></td><td>AMN 黑线与 SCAN 白线的宽度。</td></tr>
+<tr><td><code>--boundary-inset</code></td><td><code>0.80</code></td><td>边界在线段内外顶点之间的位置；基础位置为 <code>0.90 p_in + 0.10 p_out</code>。</td></tr>
+<tr><td><code>--boundary-offset</code></td><td><code>0.55</code></td><td>轮廓向表面外侧抬起的距离，避免被皮层遮住。</td></tr>
+<tr><td><code>--amn-collapse-scope</code></td><td><code>all</code></td><td><code>all</code>：所有 AMN 边界向内移动；<code>near-scan</code>：仅移动距离 SCAN 小于阈值的端点。</td></tr>
+<tr><td><code>--amn-extra-inset</code></td><td><code>0.05</code></td><td>AMN 向内移动量：<code>after = before + 0.05 × (p_in - p_out)</code>。</td></tr>
+<tr><td><code>--amn-scan-contact-mm</code></td><td><code>4</code></td><td>仅 <code>near-scan</code> 模式使用的三维距离阈值。</td></tr>
+</tbody></table>
+<pre># 不内缩：将移动量设为 0
+... --amn-extra-inset 0
+
+# 仅靠近 SCAN 的 AMN 轮廓内缩，且增加内缩距离
+... --amn-collapse-scope near-scan --amn-scan-contact-mm 6 --amn-extra-inset 0.08</pre>
+
+<h2>5. AMN 小碎点筛除</h2>
+<p>默认只删除很可能由 fsaverage5→目标表面映射造成的碎片：目标连通块不超过 3 顶点、面积不超过 5 mm²，且回溯到同一个更大的 fsaverage5 原始连通块。</p>
+<table><thead><tr><th>参数</th><th>默认值</th><th>含义</th></tr></thead><tbody>
+<tr><td><code>--amn-fragment-max-vertices</code></td><td><code>3</code></td><td>允许自动删除的最大目标顶点数。</td></tr>
+<tr><td><code>--amn-fragment-max-area-mm2</code></td><td><code>5</code></td><td>允许自动删除的最大估计面积。</td></tr>
+<tr><td><code>--keep-amn-mapping-fragments</code></td><td>关闭</td><td>不删除，仅输出评估报告。</td></tr>
+</tbody></table>
+<p>先查看 <code>*_amn_fragment_removal.tsv</code>：<code>removed</code> 是自动删除；<code>kept</code> 则说明它是独立来源、过大，或参数要求保留。</p>
+
+<h2>6. 输出文件</h2>
+<ul><li><code>*_AMN-SCAN_4panel.png</code>：带下方色带的左/右半球外侧和内侧四面板。</li><li><code>*_lh.func.gii</code>、<code>*_rh.func.gii</code>：投影后的表面数值。</li><li><code>*_display_limits.tsv</code>：实际绘图色带范围。</li><li><code>*_amn_fragment_removal.tsv</code>、<code>*_amn_component_report.tsv</code>：AMN 碎片筛除与连通块记录。</li><li><code>*_amn_contour_adjustment.tsv</code>：AMN 轮廓内缩前后的坐标。</li></ul>
+<div class="note">运行前可先执行 <code>python brain_surface_visualize_AMN-SCAN.py --help</code> 查看全部参数。脚本需要 MNE、PyVista、Neuromaps、Nibabel、SciPy、Pillow 与 Matplotlib。</div>
+</main></body></html>
